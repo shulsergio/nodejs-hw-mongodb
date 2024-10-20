@@ -20,7 +20,7 @@ export const setupServer = () => {
 
   app.get('/', (req, res) => {
     res.json({
-      message: 'Hello, World!',
+      message: 'Hello, its second Node Home Work)',
     });
   });
   app.get('/contacts', async (req, res) => {
@@ -41,7 +41,11 @@ export const setupServer = () => {
       res.status(404).json({ message: 'contact not found' });
     }
 
-    res.status(200).json({ data: contact });
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contact,
+    });
   });
 
   app.get('*', (req, res) => {
