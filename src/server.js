@@ -39,6 +39,7 @@ export const setupServer = () => {
 
     if (!contact) {
       res.status(404).json({ message: 'contact not found' });
+      return;
     }
 
     res.status(200).json({
@@ -48,16 +49,16 @@ export const setupServer = () => {
     });
   });
 
-  app.get('*', (req, res) => {
-    console.log(`Time: ${new Date().toLocaleString()}`);
-    res.status(404).json({ message: 'Not found' });
-  });
-
   app.use((err, req, res, next) => {
     res.status(500).json({
       message: 'Something went wrong',
       error: err.message,
     });
+  });
+
+  app.get('*', (req, res) => {
+    console.log(`Time: ${new Date().toLocaleString()}`);
+    res.status(404).json({ message: 'Not found' });
   });
 
   app.listen(PORT, () => {
