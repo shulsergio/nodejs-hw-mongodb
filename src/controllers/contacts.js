@@ -46,7 +46,8 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
-
+  console.log(email);
+  console.log(isFavourite);
   if (!name || !phoneNumber || !contactType) {
     return next(
       createHttpError(400, 'Need input Name, phoneNumber, and contactType.'),
