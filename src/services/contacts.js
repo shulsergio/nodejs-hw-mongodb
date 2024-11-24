@@ -8,23 +8,25 @@ export const getAllContacts = async ({
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
+  userId,
 }) => {
+  console.log('Current User ID: ', userId);
   console.log('getAllContacts Data filter= ', filter);
   console.log('getAllContacts Data page/perPage= ', page, perPage);
   const limit = perPage;
   const skip = (page - 1) * perPage;
   console.log('getAllContacts Data limit/skip= ', limit, skip);
-  const contactsQuery = ContactsCollection.find();
+  const contactsQuery = ContactsCollection.find({ userId });
   if (filter.isFavourite !== undefined) {
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
   if (filter.contactType !== undefined) {
     contactsQuery.where('contactType').equals(filter.contactType);
   }
-
-  const contactsCount = await ContactsCollection.find()
-    .merge(contactsQuery)
-    .countDocuments();
+  const contactsCount = await ContactsCollection.countDocuments({ userId });
+  // const contactsCount = await ContactsCollection.find({ userId })
+  //   .merge(contactsQuery)
+  //   .countDocuments();
   const contacts = await contactsQuery
     .skip(skip)
     .limit(limit)
@@ -36,8 +38,11 @@ export const getAllContacts = async ({
   return { data: contacts, ...PaginationData };
 };
 
-export const getContactById = async (contactId) => {
-  const contact = await ContactsCollection.findById(contactId);
+export const getContactById = async ({ contactId, userId }) => {
+  const contact = await ContactsCollection.findOne({
+    _id: contactId,
+    userId: userId,
+  });
   return contact;
 };
 
