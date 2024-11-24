@@ -5,6 +5,8 @@ import createHttpError from 'http-errors';
 import { SessionsCollection } from '../db/models/session.js';
 import { FIFTEEN_MINUTES, REFRESH_TOKEN } from '../constants/index.js';
 
+//----- registerUser
+
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
   if (user) throw createHttpError(409, 'Email in use');
