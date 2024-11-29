@@ -18,7 +18,7 @@ export const updateContactsSchema = Joi.object({
     'string.base': 'Name should be a string',
     'any.required': 'Name is required',
   }),
-  phoneNumber: Joi.string().min(3).max(30).required().messages({
+  phoneNumber: Joi.string().min(3).max(30).messages({
     'any.required': 'Phone Number is required',
   }),
   email: Joi.string().email().min(3).max(30),
