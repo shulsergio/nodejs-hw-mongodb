@@ -62,6 +62,16 @@ export const createContactController = async (req, res, next) => {
     );
   }
 
+  const photo = req.file;
+  let photoUrl;
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
   const contact = await createContact({
     name,
     phoneNumber,
@@ -69,6 +79,7 @@ export const createContactController = async (req, res, next) => {
     isFavourite,
     contactType,
     userId,
+    photo: photoUrl,
   });
   res.status(201).json({
     status: 201,
@@ -85,12 +96,10 @@ export const patchContactController = async (req, res, next) => {
   const { _id: userId } = req.user;
 
   if (photo) {
-    if (photo) {
-      if (env('ENABLE_CLOUDINARY') === 'true') {
-        photoUrl = await saveFileToCloudinary(photo);
-      } else {
-        photoUrl = await saveFileToUploadDir(photo);
-      }
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
     }
   }
   const result = await updateContact(contactId, userId.toString(), {
@@ -101,6 +110,9 @@ export const patchContactController = async (req, res, next) => {
   console.log('result -------');
   console.log(result);
   console.log('-------');
+  console.log('result.contact -------');
+  console.log(result.contact);
+  console.log('sverka-------');
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
@@ -108,7 +120,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: result.student,
+    data: result,
   });
 };
 
