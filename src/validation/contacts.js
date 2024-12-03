@@ -14,9 +14,8 @@ export const createContactsSchema = Joi.object({
 });
 
 export const updateContactsSchema = Joi.object({
-  name: Joi.string().min(3).max(30).required().messages({
+  name: Joi.string().min(3).max(30).messages({
     'string.base': 'Name should be a string',
-    'any.required': 'Name is required',
   }),
   phoneNumber: Joi.string().min(3).max(30).messages({
     'any.required': 'Phone Number is required',
