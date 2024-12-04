@@ -12,7 +12,7 @@ import { parseFavourites } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { env } from '../utils/env.js';
-const newEC = env('ENABLE_CLOUDINARY');
+const newEC = env('ENABLE_CLOUDINARY').toLowerCase();
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -72,9 +72,10 @@ export const createContactController = async (req, res, next) => {
   console.log('=======');
 
   console.log('ENABLE_CLOUDINARY ЭТО сейчас:', newEC);
-
+  const dataIf = newEC === 'true';
+  console.log('dataIf ЭТО сейчас:', dataIf);
   if (photo) {
-    if (newEC === 'true') {
+    if (dataIf) {
       photoUrl = await saveFileToCloudinary(photo, 'photo');
     } else {
       photoUrl = await saveFileToUploadDir(photo);
