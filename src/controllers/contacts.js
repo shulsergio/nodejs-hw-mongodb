@@ -63,7 +63,18 @@ export const createContactController = async (req, res, next) => {
   }
 
   const photo = req.file;
+
+  console.log('=======');
+  console.log('photo 1111');
+  console.log(photo);
+  console.log('=======');
+
   let photoUrl;
+
+  console.log('=======');
+  console.log('photoUrl 1111');
+  console.log(photoUrl);
+  console.log('=======');
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
       photoUrl = await saveFileToCloudinary(photo);
@@ -71,6 +82,10 @@ export const createContactController = async (req, res, next) => {
       photoUrl = await saveFileToUploadDir(photo);
     }
   }
+  console.log('=======');
+  console.log('photoUrl 2222 ');
+  console.log(photoUrl);
+  console.log('=======');
 
   const contact = await createContact({
     name,
