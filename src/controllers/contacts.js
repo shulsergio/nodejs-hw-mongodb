@@ -12,7 +12,7 @@ import { parseFavourites } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { env } from '../utils/env.js';
-const newEC = env('ENABLE_CLOUDINARY').toLowerCase();
+
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -71,12 +71,12 @@ export const createContactController = async (req, res, next) => {
   console.log(photoUrl);
   console.log('=======');
 
-  console.log('ENABLE_CLOUDINARY ЭТО сейчас:', newEC);
-  const dataIf = newEC === 'true';
+  // console.log('ENABLE_CLOUDINARY ЭТО сейчас:', newEC);
+  const dataIf = env('ENABLE_CLOUDINARY').toLowerCase() === 'true';
   console.log('dataIf ЭТО сейчас:', dataIf);
   if (photo) {
     if (dataIf) {
-      photoUrl = await saveFileToCloudinary(photo, 'photo');
+      photoUrl = await saveFileToCloudinary(photo);
     } else {
       photoUrl = await saveFileToUploadDir(photo);
     }
@@ -108,9 +108,9 @@ export const patchContactController = async (req, res, next) => {
   console.log('photo in patchContactController = ', photo);
   let photoUrl;
   const { _id: userId } = req.user;
-
+  const dataIf = env('ENABLE_CLOUDINARY').toLowerCase() === 'true';
   if (photo) {
-    if (env('ENABLE_CLOUDINARY') === 'true') {
+    if (dataIf) {
       photoUrl = await saveFileToCloudinary(photo);
     } else {
       photoUrl = await saveFileToUploadDir(photo);
